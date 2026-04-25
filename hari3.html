@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speaking Patterns Quiz</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --bg: #ffffff;
+            --text: #1f2937;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        
+        body { 
+            background-color: #f9fafb; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        header {
+            width: 100%;
+            background: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-home {
+            text-decoration: none;
+            color: var(--primary);
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+
+        .container { 
+            width: 90%; 
+            max-width: 500px; 
+            background: white; 
+            margin: 30px auto; 
+            padding: 30px; 
+            border-radius: 20px; 
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .intro-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #4b5563;
+            margin-bottom: 20px;
+            background: #f3f4f6;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .timer-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ef4444;
+            margin: 10px 0;
+        }
+
+        #question {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin: 25px 0;
+            color: var(--primary);
+            min-height: 60px;
+        }
+
+        .btn-group { display: flex; flex-direction: column; gap: 12px; margin-top: 25px; }
+        
+        button {
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-primary { background: var(--primary); color: white; width: 100%; }
+        .btn-outline { background: #f3f4f6; color: var(--text); width: 100%; }
+        .btn-audio { background: #10b981; color: white; margin-top: 10px; }
+        
+        button:active { transform: scale(0.98); }
+        .hidden { display: none !important; }
+
+        .key-box {
+            background: #eef2ff;
+            border: 2px solid var(--primary);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            text-align: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        input[type="number"] {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            width: 60px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="index.html" class="back-home">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+    </a>
+    <div style="font-weight: bold;">Speaking Practice</div>
+    <div style="width: 28px;"></div>
+</header>
+
+<div class="container">
+    <!-- Intro Screen -->
+    <div id="intro-screen">
+        <h2 style="margin-top: 0;">Cepat Lancar Ngomong!</h2>
+        <div class="intro-text">
+            <b>Instruksi:</b><br>
+            Dengarkan soal dalam bahasa Indonesia, lalu sebutkan bahasa Inggrisnya dengan keras sebelum waktu habis. Jangan bingung, kunci jawaban tersedia untuk membantu kamu!
+        </div>
+        <div style="margin-bottom: 20px;">
+            Set Waktu: <input type="number" id="user-timer" value="5"> Detik
+        </div>
+        <button class="btn-primary" onclick="startQuiz()">Mulai Sekarang</button>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quiz-screen" class="hidden">
+        <div class="timer-display" id="timer">5</div>
+        <div style="color: #6b7280; font-size: 0.9rem;">Terjemahkan kalimat ini:</div>
+        <div id="question">Memuat soal...</div>
+        
+        <div class="btn-group">
+            <button id="btn-show" class="btn-primary" onclick="showAnswer()">Lihat Jawaban</button>
+            <button id="btn-next" class="btn-outline hidden" onclick="nextQuestion()">Soal Berikutnya →</button>
+        </div>
+
+        <div id="key" class="hidden key-box">
+            <div style="font-size: 1.2rem; font-weight: bold; color: var(--primary);" id="correct"></div>
+            <div style="margin: 10px 0; color: #4b5563;">Cara baca: <i id="spelling"></i></div>
+            <button class="btn-audio" onclick="playAudio('en')" style="width: 100%;">🔊 Dengar Suara Inggris</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const data = [
+    {q: "Saya ingin makan", a: "I want to eat", spell: "ai wont tu iit"},
+    {q: "Saya ingin minum", a: "I want to drink", spell: "ai wont tu dringk"},
+    {q: "Saya butuh bantuan", a: "I need help", spell: "ai niid help"},
+    {q: "Saya tidak tahu", a: "I don’t know", spell: "ai dont nou"},
+    {q: "Saya mengerti", a: "I understand", spell: "ai andersten"},
+    {q: "Saya tidak mengerti", a: "I don’t understand", spell: "ai dont andersten"},
+    {q: "Saya setuju", a: "I agree", spell: "ai egri"},
+    {q: "Saya tidak setuju", a: "I disagree", spell: "ai disagri"},
+    {q: "Saya lapar", a: "I am hungry", spell: "ai em hanggri"},
+    {q: "Saya lelah", a: "I am tired", spell: "ai em taierd"},
+    {q: "Saya sibuk", a: "I am busy", spell: "ai em bizi"},
+    {q: "Saya senang", a: "I am happy", spell: "ai em hepi"},
+    {q: "Saya sedih", a: "I am sad", spell: "ai em sed"},
+    {q: "Saya marah", a: "I am angry", spell: "ai em enggri"},
+    {q: "Saya takut", a: "I am afraid", spell: "ai em efreid"},
+    {q: "Saya siap", a: "I am ready", spell: "ai em redi"},
+    {q: "Saya sedang belajar", a: "I am learning", spell: "ai em lerning"},
+    {q: "Saya bekerja", a: "I work", spell: "ai work"},
+    {q: "Saya tinggal di sini", a: "I live here", spell: "ai liv hir"},
+    {q: "Saya suka ini", a: "I like this", spell: "ai laik dis"},
+    {q: "Kamu sedang apa?", a: "What are you doing?", spell: "wat ar yu duing"},
+    {q: "Kamu dari mana?", a: "Where are you from?", spell: "wer ar yu from"},
+    {q: "Jam berapa sekarang?", a: "What time is it?", spell: "wat taim is it"},
+    {q: "Apa kabar?", a: "How are you?", spell: "hau ar yu"},
+    {q: "Saya baik-baik saja", a: "I’m fine", spell: "aim fain"},
+    {q: "Sampai jumpa", a: "See you", spell: "si yu"},
+    {q: "Terima kasih", a: "Thank you", spell: "tengkyu"},
+    {q: "Sama-sama", a: "You’re welcome", spell: "yor welkam"},
+    {q: "Maaf", a: "Sorry", spell: "sori"},
+    {q: "Permisi", a: "Excuse me", spell: "ekskyus mi"},
+    {q: "Tunggu sebentar", a: "Wait a moment", spell: "weit e momen"},
+    {q: "Tolong ulangi", a: "Please repeat", spell: "plis ripit"},
+    {q: "Bicara pelan", a: "Speak slowly", spell: "spik slouli"},
+    {q: "Saya tidak yakin", a: "I’m not sure", spell: "aim not shur"},
+    {q: "Mungkin nanti", a: "Maybe later", spell: "meibi leiter"},
+    {q: "Tentu saja", a: "Of course", spell: "of kors"},
+    {q: "Tidak masalah", a: "No problem", spell: "no problem"},
+    {q: "Saya pikir begitu", a: "I think so", spell: "ai thingk so"},
+    {q: "Saya harap begitu", a: "I hope so", spell: "ai hop so"},
+    {q: "Itu bagus", a: "That’s good", spell: "dets gud"},
+    {q: "Itu buruk", a: "That’s bad", spell: "dets bed"},
+    {q: "Itu menarik", a: "That’s interesting", spell: "dets interessting"},
+    {q: "Saya setuju denganmu", a: "I agree with you", spell: "ai egri with yu"},
+    {q: "Saya tidak yakin tentang itu", a: "I’m not sure about that", spell: "aim not shur ebaut det"},
+    {q: "Saya rasa tidak", a: "I don’t think so", spell: "ai dont thingk so"},
+    {q: "Tunggu saya", a: "Wait for me", spell: "weit for mi"},
+    {q: "Ikuti saya", a: "Follow me", spell: "folou mi"},
+    {q: "Ayo pergi", a: "Let’s go", spell: "lets go"},
+    {q: "Ayo mulai", a: "Let’s start", spell: "lets start"},
+    {q: "Sudah selesai", a: "It’s done", spell: "its dan"},
+    {q: "Saya mau pesan makanan", a: "I want to order food", spell: "ai wont tu order fud"},
+    {q: "Berapa harganya?", a: "How much is it?", spell: "hau mach is it"},
+    {q: "Terlalu mahal", a: "It’s too expensive", spell: "its tu ekspensif"},
+    {q: "Ada diskon?", a: "Any discount?", spell: "eni diskoun"},
+    {q: "Saya hanya lihat-lihat", a: "I’m just looking", spell: "aim just luking"},
+    {q: "Saya mau beli ini", a: "I want to buy this", spell: "ai wont tu bai dis"},
+    {q: "Di mana toilet?", a: "Where is the toilet?", spell: "wer is de toilet"},
+    {q: "Di mana jalan keluar?", a: "Where is the exit?", spell: "wer is de eksit"},
+    {q: "Bisa bantu saya?", a: "Can you help me?", spell: "ken yu help mi"},
+    {q: "Saya tersesat", a: "I am lost", spell: "ai em lost"},
+    {q: "Saya mencari tempat ini", a: "I’m looking for this place", spell: "aim luking for dis pleis"},
+    {q: "Tolong arahkan saya", a: "Please guide me", spell: "plis gaid mi"},
+    {q: "Saya mau check-in", a: "I want to check in", spell: "ai wont tu cek in"},
+    {q: "Saya mau check-out", a: "I want to check out", spell: "ai wont tu cek aut"},
+    {q: "Saya punya reservasi", a: "I have a reservation", spell: "ai hev e reserfesen"},
+    {q: "Saya tidak punya uang kecil", a: "I don’t have change", spell: "ai dont hev ceinj"},
+    {q: "Bisa bayar pakai kartu?", a: "Can I pay by card?", spell: "ken ai pei bai kard"},
+    {q: "Saya mau air putih", a: "I want water", spell: "ai wont woter"},
+    {q: "Saya alergi", a: "I have an allergy", spell: "ai hev en alerji"},
+    {q: "Saya tidak makan ini", a: "I don’t eat this", spell: "ai dont iit dis"},
+    {q: "Tolong tanpa pedas", a: "No spicy please", spell: "no spaisi plis"},
+    {q: "Tambah satu lagi", a: "One more please", spell: "wan mor plis"},
+    {q: "Saya tunggu di sini", a: "I’ll wait here", spell: "ail weit hir"},
+    {q: "Saya akan kembali", a: "I’ll come back", spell: "ail kam bek"},
+    {q: "Sudah cukup", a: "That’s enough", spell: "dets inaf"},
+    {q: "Terima kasih banyak", a: "Thank you very much", spell: "tengkyu veri mach"},
+    {q: "Sama-sama, senang membantu", a: "My pleasure", spell: "mai plezer"},
+    {q: "Sampai besok", a: "See you tomorrow", spell: "si yu tumoro"},
+    {q: "Hati-hati di jalan", a: "Take care", spell: "teik ker"},
+    {q: "Selamat jalan", a: "Goodbye", spell: "gudbai"},
+    {q: "Saya sedang mencoba", a: "I’m trying", spell: "aim traiing"},
+    {q: "Saya akan mencobanya", a: "I’ll try it", spell: "ail trai it"},
+    {q: "Saya tidak terbiasa", a: "I’m not used to it", spell: "aim not yust tu it"},
+    {q: "Saya terbiasa", a: "I’m used to it", spell: "ai em yust tu it"},
+    {q: "Saya sedang terburu-buru", a: "I’m in a hurry", spell: "aim in e hari"},
+    {q: "Tidak terburu-buru", a: "No rush", spell: "no rash"},
+    {q: "Santai saja", a: "Take it easy", spell: "teik it izi"},
+    {q: "Tidak apa-apa", a: "It’s okay", spell: "its oke"},
+    {q: "Saya menghargainya", a: "I appreciate it", spell: "ai apresiet it"},
+    {q: "Saya penasaran", a: "I’m curious", spell: "aim kyurios"},
+    {q: "Saya lupa", a: "I forgot", spell: "ai forgot"},
+    {q: "Saya ingat", a: "I remember", spell: "ai rimember"},
+    {q: "Itu masuk akal", a: "That makes sense", spell: "det meks sens"},
+    {q: "Itu tidak masuk akal", a: "That doesn’t make sense", spell: "det dazent meks sens"},
+    {q: "Saya serius", a: "I’m serious", spell: "aim siries"},
+    {q: "Saya bercanda", a: "I’m joking", spell: "aim jooking"},
+    {q: "Saya yakin", a: "I’m sure", spell: "aim shur"},
+    {q: "Saya ragu", a: "I doubt it", spell: "ai daut it"},
+    {q: "Itu ide bagus", a: "That’s a good idea", spell: "dets e gud aidiya"},
+    {q: "Ayo kita coba", a: "Let’s give it a try", spell: "lets giv it e trai"}
+];
+
+let current = 0;
+let time = 5;
+let timerInterval;
+
+function startQuiz(){
+    document.getElementById("intro-screen").classList.add("hidden");
+    document.getElementById("quiz-screen").classList.remove("hidden");
+    nextQuestion();
+}
+
+function nextQuestion(){
+    current = Math.floor(Math.random() * data.length);
+    document.getElementById("question").innerText = data[current].q;
+    document.getElementById("key").classList.add("hidden");
+    document.getElementById("btn-next").classList.add("hidden");
+    document.getElementById("btn-show").classList.remove("hidden");
+    
+    // Set Waktu
+    let userSetTime = document.getElementById("user-timer").value;
+    time = userSetTime ? parseInt(userSetTime) : 5;
+    
+    // Play Audio Indonesia Otomatis
+    playAudio('id');
+    startTimer();
+}
+
+function startTimer(){
+    document.getElementById("timer").innerText = time;
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        time--;
+        document.getElementById("timer").innerText = time;
+        if(time <= 0){
+            clearInterval(timerInterval);
+            showAnswer();
+        }
+    }, 1000);
+}
+
+function showAnswer(){
+    clearInterval(timerInterval);
+    document.getElementById("key").classList.remove("hidden");
+    document.getElementById("correct").innerText = data[current].a;
+    document.getElementById("spelling").innerText = data[current].spell;
+    document.getElementById("btn-show").classList.add("hidden");
+    document.getElementById("btn-next").classList.remove("hidden");
+}
+
+function playAudio(langType){
+    let text = (langType === 'id') ? data[current].q : data[current].a;
+    let langCode = (langType === 'id') ? "id-ID" : "en-US";
+    
+    let speech = new SpeechSynthesisUtterance(text);
+    speech.lang = langCode;
+    speech.rate = 0.9;
+    window.speechSynthesis.speak(speech);
+}
+</script>
+
+</body>
+</html>
