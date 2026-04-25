@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speaking App - Day 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0891B2; /* Warna berbeda untuk Day 2 (Teal) */
+            --primary-hover: #0E7490;
+            --bg: #F0F9FF;
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --card-bg: #FFFFFF;
+            --border: #E2E8F0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            margin-top: 10px;
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .btn-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            padding: 5px 12px;
+            border-radius: 8px;
+            background: #fff;
+            border: 1px solid var(--border);
+        }
+
+        .btn-home:hover {
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        header h1 { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+        header p { font-size: 0.9rem; color: var(--text-muted); }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--border);
+            border-radius: 10px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+
+        .instruction {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--primary);
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        #intro-box {
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            background: #F0FDFA;
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+
+        #dialogText {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .answer-section {
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .answer-section.active { display: block; animation: fadeIn 0.4s ease; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .label-answer { font-size: 0.8rem; color: var(--text-muted); margin-top: 10px; }
+        .text-en { font-size: 1.1rem; font-weight: 700; color: var(--primary); }
+        .text-id { font-size: 1rem; color: var(--text-main); }
+        .text-read { font-size: 0.9rem; font-style: italic; color: #0891B2; background: #ECFEFF; padding: 4px 8px; border-radius: 6px; display: inline-block; margin-top: 5px; }
+
+        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+        
+        button {
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: none;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-outline { background: white; border: 1.5px solid var(--border); color: var(--text-main); }
+        .btn-outline:hover { background: #f1f5f9; }
+
+        .settings-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            margin-bottom: 50px;
+        }
+
+        .setting-item { margin-bottom: 15px; }
+        .setting-item label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: var(--text-muted); }
+        
+        input[type="range"] { width: 100%; accent-color: var(--primary); }
+        input[type="number"] { width: 60px; padding: 5px; border-radius: 6px; border: 1px solid var(--border); }
+
+        .full-width { grid-column: span 2; }
+        .hidden { display: none !important; }
+
+        @media (max-width: 480px) {
+            body { padding: 15px; }
+            #dialogText { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <nav class="nav-header">
+        <a href="index.html" class="btn-home">🏠 Beranda</a>
+    </nav>
+
+    <header>
+        <h1>Speaking App</h1>
+        <p>Day 2: Pekerjaan & Hobi</p>
+    </header>
+
+    <div class="progress-bar">
+        <div id="progress-fill"></div>
+    </div>
+
+    <div class="card">
+        <span class="instruction" id="step-counter">Instruksi Penggunaan</span>
+        
+        <div id="intro-box">
+            Dalam latihan topik Pekerjaan dan Hobi ini, silakan jawab secara lisan. Jangan takut salah. Dengarkan pertanyaan bahasa Indonesia, lalu periksa kunci jawaban bahasa Inggrisnya.
+        </div>
+
+        <p id="dialogText" class="hidden"></p>
+        
+        <div class="answer-section" id="answerBox">
+            <div class="label-answer">English:</div>
+            <p class="text-en" id="english"></p>
+            <div class="label-answer">Artinya:</div>
+            <p class="text-id" id="indo"></p>
+            <div class="label-answer">Cara baca:</div>
+            <p class="text-read" id="read"></p>
+            
+            <button class="btn-outline" onclick="playVoice(currentDialog.answer.en, 'en-US')" style="margin-top: 15px; width: 100%;">
+                🔊 Dengarkan Suara
+            </button>
+        </div>
+
+        <div class="btn-group" id="start-controls">
+            <button class="btn-primary full-width" onclick="startApp()">▶️ Mulai Latihan</button>
+        </div>
+
+        <div class="btn-group" id="main-controls" style="display: none;">
+            <button class="btn-outline" onclick="showAnswer()">💡 Jawaban</button>
+            <button class="btn-primary" onclick="nextStep()">Lanjut ➡️</button>
+        </div>
+    </div>
+
+    <div class="settings-card">
+        <span class="instruction">Pengaturan</span>
+        <div class="setting-item" style="display: flex; justify-content: space-between; align-items: center;">
+            <label>Jeda Otomatis (detik)</label>
+            <input type="number" id="delay" value="6" min="3" max="20">
+        </div>
+        <div class="setting-item">
+            <label>Kecepatan Suara</label>
+            <input type="range" min="0.5" max="1.2" step="0.1" value="0.9" id="speed">
+        </div>
+    </div>
+</div>
+
+<script>
+let step = 0;
+let autoTimer;
+let currentDialog = null;
+
+const introText = "Dalam latihan topik Pekerjaan dan Hobi ini, silakan jawab secara lisan. Jangan takut salah. Setiap pertanyaan ada kunci jawabannya, ucapan, dan pelafalan yang benar.";
+
+const dialogs = [
+    { id: 1, text: "Apa pekerjaan kamu?", answer: { en: "I am a teacher.", id: "Saya adalah seorang guru.", read: "ai em e ti-cer" } },
+    { id: 2, text: "Di mana kamu bekerja?", answer: { en: "I work in an office.", id: "Saya bekerja di sebuah kantor.", read: "ai werk in en o-fis" } },
+    { id: 3, text: "Apakah kamu suka pekerjaanmu?", answer: { en: "Yes, I love my job.", id: "Ya, saya mencintai pekerjaan saya.", read: "yes, ai lav mai job" } },
+    { id: 4, text: "Berapa jam kamu bekerja sehari?", answer: { en: "I work eight hours a day.", id: "Saya bekerja delapan jam sehari.", read: "ai werk eit au-ers e dei" } },
+    { id: 5, text: "Apa cita-cita kamu dulu?", answer: { en: "I wanted to be a pilot.", id: "Dulu saya ingin menjadi pilot.", read: "ai won-ted tu bi e pai-lot" } },
+    { id: 6, text: "Apakah pekerjaanmu sulit?", answer: { en: "Sometimes it is quite hard.", id: "Kadang-kadang cukup sulit.", read: "sam-taims it iz kwait hard" } },
+    { id: 7, text: "Siapa rekan kerja favoritmu?", answer: { en: "My favorite colleague is Sarah.", id: "Rekan kerja favorit saya adalah Sarah.", read: "mai fe-vo-rit ko-lig iz sa-ra" } },
+    { id: 8, text: "Kamu berangkat kerja naik apa?", answer: { en: "I go to work by motorcycle.", id: "Saya pergi bekerja naik motor.", read: "ai go tu werk bai mo-tor-sai-kel" } },
+    { id: 9, text: "Apa kamu sedang mencari kerja?", answer: { en: "No, I already have a job.", id: "Tidak, saya sudah punya pekerjaan.", read: "no, ai ol-re-di hev e job" } },
+    { id: 10, text: "Apa kamu bekerja di akhir pekan?", answer: { en: "No, I am off on weekends.", id: "Tidak, saya libur di akhir pekan.", read: "no, ai em of on wik-ends" } },
+    { id: 11, text: "Apa hobi kamu?", answer: { en: "My hobby is swimming.", id: "Hobi saya adalah berenang.", read: "mai ho-bi iz swi-ming" } },
+    { id: 12, text: "Seberapa sering kamu melakukannya?", answer: { en: "I do it once a week.", id: "Saya melakukannya seminggu sekali.", read: "ai du it wans e wik" } },
+    { id: 13, text: "Kamu suka membaca buku?", answer: { en: "Yes, I like reading novels.", id: "Ya, saya suka membaca novel.", read: "yes, ai laik ri-ding no-vels" } },
+    { id: 14, text: "Apa genre film favoritmu?", answer: { en: "I like action movies.", id: "Saya suka film aksi.", read: "ai laik ek-shun mu-vis" } },
+    { id: 15, text: "Apa kamu suka berkebun?", answer: { en: "Yes, I have a small garden.", id: "Ya, saya punya taman kecil.", read: "yes, ai hev e smol gar-den" } },
+    { id: 16, text: "Apa kamu bisa bermain gitar?", answer: { en: "No, but I want to learn.", id: "Tidak, tapi saya ingin belajar.", read: "no, bat ai wont tu lern" } },
+    { id: 17, text: "Di mana kamu biasa menyalurkan hobi?", answer: { en: "I usually go to the park.", id: "Saya biasanya pergi ke taman.", read: "ai yu-zu-a-li go tu de park" } },
+    { id: 18, text: "Dengan siapa kamu biasanya pergi?", answer: { en: "I usually go with my friends.", id: "Saya biasanya pergi dengan teman-teman.", read: "ai yu-zu-a-li go with mai frends" } },
+    { id: 19, text: "Apa hobi itu mahal?", answer: { en: "No, it is quite cheap.", id: "Tidak, itu cukup murah.", read: "no, it iz kwait cip" } },
+    { id: 20, text: "Kapan kamu punya waktu luang?", answer: { en: "I have free time in the evening.", id: "Saya punya waktu luang di sore hari.", read: "ai hev fri taim in de iv-ning" } },
+    { id: 21, text: "Kamu suka memasak?", answer: { en: "Yes, I cook every day.", id: "Ya, saya memasak setiap hari.", read: "yes, ai kuk ev-ri dei" } },
+    { id: 22, text: "Apa masakan spesialis kamu?", answer: { en: "I am good at making pasta.", id: "Saya pandai membuat pasta.", read: "ai em gud at mei-king pas-ta" } },
+    { id: 23, text: "Kamu suka memotret?", answer: { en: "Yes, I like photography.", id: "Ya, saya suka fotografi.", read: "yes, ai laik fo-tog-ra-fi" } },
+    { id: 24, text: "Apa kamu punya kamera?", answer: { en: "I only use my phone camera.", id: "Saya hanya pakai kamera HP.", read: "ai on-li yus mai fon ka-me-ra" } },
+    { id: 25, text: "Kamu suka mendaki gunung?", answer: { en: "No, it's too tiring for me.", id: "Tidak, itu terlalu melelahkan buat saya.", read: "no, its tu tai-ring for mi" } },
+    { id: 26, text: "Apa kamu koleksi sesuatu?", answer: { en: "Yes, I collect old coins.", id: "Ya, saya mengoleksi koin lama.", read: "yes, ai ko-lek old ko-ins" } },
+    { id: 27, text: "Apa lagu favorit kamu?", answer: { en: "I like pop songs.", id: "Saya suka lagu pop.", read: "ai laik pop songs" } },
+    { id: 28, text: "Siapa penyanyi favoritmu?", answer: { en: "My favorite singer is Bruno Mars.", id: "Penyanyi favorit saya Bruno Mars.", read: "mai fe-vo-rit sing-er iz bru-no mars" } },
+    { id: 29, text: "Kamu suka main game?", answer: { en: "Yes, I play mobile games.", id: "Ya, saya main game HP.", read: "yes, ai plei mo-bail geims" } },
+    { id: 30, text: "Berapa lama kamu main game?", answer: { en: "Just one hour a day.", id: "Cuma satu jam sehari.", read: "jas wan au-er e dei" } },
+    { id: 31, text: "Apa kamu bekerja dari rumah?", answer: { en: "Yes, I work from home.", id: "Ya, saya bekerja dari rumah.", read: "yes, ai werk from hom" } },
+    { id: 32, text: "Apa pekerjaan impian kamu?", answer: { en: "I want to be a businessman.", id: "Saya ingin jadi pengusaha.", read: "ai wont tu bi e biz-nis-men" } },
+    { id: 33, text: "Apa kamu suka lembur?", answer: { en: "No, I hate working late.", id: "Tidak, saya benci kerja lembur.", read: "no, ai heit wer-king leit" } },
+    { id: 34, text: "Kamu lebih suka kopi atau teh saat kerja?", answer: { en: "I prefer coffee at work.", id: "Saya lebih suka kopi saat kerja.", read: "ai pre-fer ko-fi at werk" } },
+    { id: 35, text: "Apa kamu punya bisnis sendiri?", answer: { en: "Not yet, maybe in the future.", id: "Belum, mungkin di masa depan.", read: "not yet, mei-bi in de fyu-cer" } },
+    { id: 36, text: "Kamu suka olahraga apa?", answer: { en: "I like playing badminton.", id: "Saya suka main bulu tangkis.", read: "ai laik ple-ing bed-min-ten" } },
+    { id: 37, text: "Kapan terakhir kali kamu liburan?", answer: { en: "I went on vacation last month.", id: "Saya liburan bulan lalu.", read: "ai went on ve-kei-shun last manth" } },
+    { id: 38, text: "Kamu suka menggambar?", answer: { en: "Yes, I draw in my sketchbook.", id: "Ya, saya menggambar di buku sketsa.", read: "yes, ai dro in mai skec-buk" } },
+    { id: 39, text: "Apa hobi kamu menghasilkan uang?", answer: { en: "Sometimes I sell my paintings.", id: "Kadang saya menjual lukisan saya.", read: "sam-taims ai sel mai pein-tings" } },
+    { id: 40, text: "Kamu lebih suka indoor atau outdoor?", answer: { en: "I prefer outdoor activities.", id: "Saya lebih suka aktivitas luar ruangan.", read: "ai pre-fer aut-dor ak-ti-vi-tis" } },
+    { id: 41, text: "Apa seragam kerjamu?", answer: { en: "I wear a formal shirt.", id: "Saya memakai kemeja formal.", read: "ai wer e for-mal shert" } },
+    { id: 42, text: "Apakah kantormu jauh?", answer: { en: "Yes, it takes one hour.", id: "Ya, perjalanannya satu jam.", read: "yes, it teiks wan au-er" } },
+    { id: 43, text: "Siapa bos kamu?", answer: { en: "My boss is Mr. Smith.", id: "Bos saya adalah Tuan Smith.", read: "mai bos iz mis-ter smith" } },
+    { id: 44, text: "Kamu suka ikut komunitas hobi?", answer: { en: "Yes, I joined a cycling club.", id: "Ya, saya ikut klub sepeda.", read: "yes, ai joind e sai-kling klab" } },
+    { id: 45, text: "Apa kamu sering menonton YouTube?", answer: { en: "Yes, to learn new things.", id: "Ya, untuk belajar hal baru.", read: "yes, tu lern nyu things" } },
+    { id: 46, text: "Apa kamu ingin ganti pekerjaan?", answer: { en: "No, I am happy here.", id: "Tidak, saya bahagia di sini.", read: "no, ai em he-pi hir" } },
+    { id: 47, text: "Apa hobi yang ingin kamu coba?", answer: { en: "I want to try surfing.", id: "Saya ingin coba berselancar.", read: "ai wont tu trai ser-fing" } },
+    { id: 48, text: "Apa kamu suka belajar bahasa?", answer: { en: "Yes, it is my favorite hobby.", id: "Ya, itu hobi favorit saya.", read: "yes, it iz mai fe-vo-rit ho-bi" } },
+    { id: 49, text: "Apa kamu lelah hari ini?", answer: { en: "A little bit, but I'm okay.", id: "Sedikit, tapi saya baik-baik saja.", read: "e lit-tel bit, bat aim o-kei" } },
+    { id: 50, text: "Sudah siap untuk besok?", answer: { en: "Yes, I am always ready.", id: "Ya, saya selalu siap.", read: "yes, ai em ol-weis re-di" } }
+];
+
+function startApp() {
+    document.getElementById("intro-box").classList.add("hidden");
+    document.getElementById("start-controls").classList.add("hidden");
+    document.getElementById("dialogText").classList.remove("hidden");
+    document.getElementById("dialogText").innerText = "Mendengarkan instruksi...";
+    
+    let msg = new SpeechSynthesisUtterance();
+    msg.text = introText;
+    msg.lang = 'id-ID';
+    msg.rate = 0.9;
+    
+    msg.onend = function() {
+        step = 0;
+        document.getElementById("main-controls").style.display = "grid";
+        nextStep();
+    };
+    
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(msg);
+}
+
+function nextStep() {
+    clearTimeout(autoTimer);
+    if (step >= dialogs.length) {
+        document.getElementById("dialogText").innerText = "Latihan Day 2 Selesai! 🌟";
+        document.getElementById("answerBox").classList.remove("active");
+        document.getElementById("main-controls").style.display = "none";
+        document.getElementById("start-controls").classList.remove("hidden");
+        document.getElementById("start-controls").innerHTML = `<button class="btn-primary full-width" onclick="location.reload()">Ulangi Lagi</button>`;
+        return;
+    }
+    currentDialog = dialogs[step];
+    document.getElementById("step-counter").innerText = `Materi ${step + 1} dari ${dialogs.length}`;
+    document.getElementById("dialogText").innerText = currentDialog.text;
+    document.getElementById("answerBox").classList.remove("active");
+    document.getElementById("progress-fill").style.width = ((step + 1) / dialogs.length) * 100 + "%";
+    playVoice(currentDialog.text, 'id-ID');
+    autoTimer = setTimeout(() => { showAnswer(); }, document.getElementById("delay").value * 1000);
+    step++;
+}
+
+function showAnswer() {
+    clearTimeout(autoTimer);
+    if (!currentDialog) return;
+    document.getElementById("english").innerText = currentDialog.answer.en;
+    document.getElementById("indo").innerText = currentDialog.answer.id;
+    document.getElementById("read").innerText = currentDialog.answer.read;
+    document.getElementById("answerBox").classList.add("active");
+}
+
+function playVoice(text, lang) {
+    window.speechSynthesis.cancel();
+    let msg = new SpeechSynthesisUtterance();
+    msg.text = text;
+    msg.lang = lang;
+    msg.rate = document.getElementById("speed").value;
+    window.speechSynthesis.speak(msg);
+}
+</script>
+
+</body>
+</html>
