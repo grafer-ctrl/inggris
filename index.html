@@ -10,23 +10,89 @@
         :root {
             --primary: #1b5e20;
             --accent: #4caf50;
+            --accent-light: #e8f5e9;
             --bg-color: #f8faf9;
             --white: #ffffff;
             --text-main: #2c3e50;
             --text-muted: #7f8c8d;
             --radius: 20px;
             --shadow: 0 10px 30px rgba(0,0,0,0.08);
-            --transition: all 0.3s ease;
+            --shadow-lg: 0 20px 40px rgba(0,0,0,0.12);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Poppins', sans-serif; background: var(--bg-color); color: var(--text-main); }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg-color); color: var(--text-main); overflow-x: hidden; }
         .hidden { display: none !important; }
 
         /* Loader */
         #loader { position: fixed; inset: 0; background: white; display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .spinner { width: 45px; height: 45px; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* HEADER MODERN */
+        .header { 
+            background: var(--white); 
+            box-shadow: var(--shadow); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            padding: 12px 20px; 
+        }
+        .header-content { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            gap: 15px; 
+        }
+        .logo { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            font-weight: 700; 
+            font-size: 1.1rem; 
+            color: var(--primary); 
+        }
+        .logo i { font-size: 1.4rem; }
+        .header-stats { display: flex; align-items: center; gap: 20px; }
+        .stat-item { 
+            text-align: center; 
+            min-width: 60px; 
+        }
+        .stat-number { font-weight: 700; font-size: 1.1rem; color: var(--primary); }
+        .stat-label { font-size: 0.7rem; color: var(--text-muted); }
+
+        /* MOBILE MENU */
+        .mobile-menu-btn { 
+            display: none; 
+            background: none; 
+            border: none; 
+            font-size: 1.3rem; 
+            color: var(--text-main); 
+            cursor: pointer; 
+        }
+        .header-menu { display: flex; align-items: center; gap: 10px; }
+        .menu-btn { 
+            background: var(--accent-light); 
+            border: none; 
+            padding: 8px 16px; 
+            border-radius: 25px; 
+            font-size: 0.85rem; 
+            font-weight: 500; 
+            cursor: pointer; 
+            transition: var(--transition); 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+            color: var(--primary); 
+        }
+        .menu-btn:hover, .menu-btn.active { 
+            background: var(--accent); 
+            color: white; 
+            transform: translateY(-1px); 
+        }
 
         /* --- UI LOGIN / REGISTER --- */
         .auth-wrapper { 
@@ -41,7 +107,7 @@
             background: var(--white); 
             padding: 40px; 
             border-radius: 25px; 
-            box-shadow: var(--shadow); 
+            box-shadow: var(--shadow-lg); 
             width: 100%; 
             max-width: 420px; 
             text-align: center;
@@ -58,52 +124,209 @@
         .form-group input:focus { border-color: var(--primary); outline: none; background: #fff; }
 
         .btn-main { 
-            background: var(--primary); color: white; border: none; padding: 15px; 
-            border-radius: 12px; cursor: pointer; font-weight: 600; width: 100%; 
-            font-size: 1rem; transition: var(--transition); margin-top: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--accent)); 
+            color: white; 
+            border: none; 
+            padding: 15px; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            width: 100%; 
+            font-size: 1rem; 
+            transition: var(--transition); 
+            margin-top: 10px;
         }
-        .btn-main:hover { background: #0e3d11; transform: translateY(-2px); }
+        .btn-main:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
 
         /* --- DASHBOARD --- */
-        .container { max-width: 1000px; margin: 0 auto; padding: 30px 20px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         .welcome-box { 
-            background: white; padding: 25px; border-radius: 20px; 
-            box-shadow: var(--shadow); margin-bottom: 30px; 
-            display: flex; justify-content: space-between; align-items: center;
+            background: white; 
+            padding: 25px; 
+            border-radius: 20px; 
+            box-shadow: var(--shadow); 
+            margin-bottom: 30px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
         }
-        .welcome-box h2 { font-size: 1.2rem; }
+        .welcome-box h2 { font-size: 1.3rem; color: var(--primary); }
 
         .progress-card { 
-            background: linear-gradient(135deg, #1b5e20 0%, #4caf50 100%); 
-            color: white; padding: 30px; border-radius: 25px; margin-bottom: 35px; box-shadow: var(--shadow);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); 
+            color: white; 
+            padding: 30px; 
+            border-radius: 25px; 
+            margin-bottom: 35px; 
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
         }
-        .bar-bg { background: rgba(255,255,255,0.2); height: 10px; border-radius: 10px; margin: 15px 0; overflow: hidden; }
-        #progress-fill { background: white; height: 100%; width: 0%; transition: 0.8s ease; }
+        .progress-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+        }
+        .bar-bg { background: rgba(255,255,255,0.2); height: 12px; border-radius: 10px; margin: 15px 0; overflow: hidden; }
+        #progress-fill { background: rgba(255,255,255,0.9); height: 100%; width: 0%; transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 10px; }
 
-        /* GRID CARD VIEW */
+        /* GRID CARD VIEW - MOBILE FRIENDLY */
+        .grid-section { margin-bottom: 40px; }
         .grid-materi { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
-            gap: 20px; 
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+            gap: 16px; 
         }
         .day-card { 
-            background: white; padding: 25px; border-radius: 22px; 
-            text-align: center; cursor: pointer; box-shadow: var(--shadow); 
-            transition: var(--transition); border: 2px solid transparent;
+            background: white; 
+            padding: 20px 15px; 
+            border-radius: 18px; 
+            text-align: center; 
+            cursor: pointer; 
+            box-shadow: var(--shadow); 
+            transition: var(--transition); 
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
         }
-        .day-card:hover { transform: translateY(-8px); border-color: var(--primary); }
-        .day-card.completed { background: #e8f5e9; border-color: var(--primary); }
-        .day-card h4 { font-size: 1.1rem; margin: 10px 0 5px; }
-        .day-card i { font-size: 1.5rem; color: var(--primary); }
+        .day-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--accent);
+            transform: scaleX(0);
+            transition: var(--transition);
+        }
+        .day-card:hover { 
+            transform: translateY(-6px); 
+            box-shadow: var(--shadow-lg); 
+            border-color: var(--primary); 
+        }
+        .day-card:hover::before { transform: scaleX(1); }
+        .day-card.completed { 
+            background: linear-gradient(135deg, var(--accent-light), #f1f8e9); 
+            border-color: var(--accent); 
+        }
+        .day-card.completed::before { background: var(--primary); }
+        .day-card h4 { font-size: 1rem; margin: 12px 0 8px; font-weight: 600; }
+        .day-card i { font-size: 1.8rem; color: var(--primary); margin-bottom: 8px; display: block; }
+        .day-card .status { 
+            font-size: 0.7rem; 
+            font-weight: 600; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            background: rgba(255,255,255,0.8); 
+        }
+        .day-card.completed .status { 
+            background: var(--accent); 
+            color: white; 
+        }
 
         /* VIEWER */
         #viewer { position: fixed; inset: 0; background: white; z-index: 1000; display: flex; flex-direction: column; }
-        .viewer-nav { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .viewer-nav { 
+            padding: 15px 20px; 
+            border-bottom: 1px solid #eee; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: var(--white); 
+            box-shadow: var(--shadow); 
+        }
+        .viewer-nav button { 
+            border: none; 
+            background: none; 
+            cursor: pointer; 
+            font-size: 1.3rem; 
+            color: var(--text-main); 
+            padding: 8px; 
+            border-radius: 12px; 
+            transition: var(--transition); 
+        }
+        .viewer-nav button:hover { background: var(--accent-light); }
         iframe { flex-grow: 1; border: none; width: 100%; }
-        .btn-finish { background: #2196f3; color: white; border: none; padding: 18px; font-weight: 700; cursor: pointer; }
+        .btn-finish { 
+            background: linear-gradient(135deg, #2196f3, #1976d2); 
+            color: white; 
+            border: none; 
+            padding: 18px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            font-size: 1rem; 
+            transition: var(--transition); 
+        }
+        .btn-finish:hover:not(:disabled) { 
+            transform: translateY(-2px); 
+            box-shadow: var(--shadow-lg); 
+        }
+        .btn-finish:disabled { 
+            background: #ccc; 
+            cursor: not-allowed; 
+            transform: none; 
+        }
 
-        @media (max-width: 600px) {
-            .grid-materi { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+        /* MODAL PAGES */
+        .modal { 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.5); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 2000; 
+            padding: 20px; 
+            opacity: 0; 
+            visibility: hidden; 
+            transition: var(--transition); 
+        }
+        .modal.active { opacity: 1; visibility: visible; }
+        .modal-content { 
+            background: white; 
+            border-radius: 20px; 
+            max-width: 90vw; 
+            max-height: 90vh; 
+            width: 100%; 
+            max-width: 600px; 
+            box-shadow: var(--shadow-lg); 
+        }
+        .modal-header { 
+            padding: 25px; 
+            border-bottom: 1px solid #eee; 
+            border-radius: 20px 20px 0 0; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .modal-body { padding: 25px; max-height: 60vh; overflow-y: auto; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header-content { padding: 0 10px; }
+            .header-stats { gap: 12px; }
+            .stat-item { min-width: 50px; }
+            .stat-number { font-size: 1rem; }
+            .grid-materi { 
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); 
+                gap: 12px; 
+            }
+            .day-card { padding: 16px 12px; }
+            .day-card h4 { font-size: 0.95rem; }
+            .container { padding: 15px; }
+            .welcome-box { flex-direction: column; gap: 15px; text-align: center; }
+        }
+
+        @media (max-width: 480px) {
+            .mobile-menu-btn { display: block; }
+            .header-menu { display: none; position: absolute; top: 100%; left: 0; right: 0; background: white; flex-direction: column; padding: 15px; box-shadow: var(--shadow); border-radius: 0 0 20px 20px; }
+            .header-menu.active { display: flex; }
+            .grid-materi { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; }
         }
     </style>
 </head>
@@ -111,8 +334,45 @@
 
     <div id="loader"><div class="spinner"></div></div>
 
+    <!-- HEADER -->
+    <header class="header" id="header" style="display: none;">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span>English Mastery</span>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="days-completed">0</div>
+                    <div class="stat-label">Hari Selesai</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="progress-pct">0%</div>
+                    <div class="stat-label">Progres</div>
+                </div>
+            </div>
+            <button class="mobile-menu-btn" id="mobile-menu-btn">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="header-menu" id="header-menu">
+                <button class="menu-btn" onclick="openNote()">
+                    <i class="fa-solid fa-sticky-note"></i>
+                    Catatan
+                </button>
+                <button class="menu-btn" onclick="openAbout()">
+                    <i class="fa-solid fa-info-circle"></i>
+                    Tentang
+                </button>
+                <button class="menu-btn" onclick="handleLogout()" style="background: #ff5722; color: white;">
+                    <i class="fa-solid fa-sign-out-alt"></i>
+                    Keluar
+                </button>
+            </div>
+        </div>
+    </header>
+
     <!-- HALAMAN AUTH -->
-    <div id="auth-section" class="auth-wrapper hidden">
+    <div id="auth-section" class="auth-wrapper">
         <div class="auth-card">
             <div style="background:#e8f5e9; width:70px; height:70px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
                 <i class="fa-solid fa-graduation-cap fa-2xl" style="color:var(--primary)"></i>
@@ -131,7 +391,7 @@
                     <label>PASSWORD</label>
                     <input type="password" id="password" placeholder="Minimal 6 karakter" required>
                 </div>
-                <div class="form-group" id="access-code-group">
+                <div class="form-group" id="access-code-group" style="display: none;">
                     <label>KODE AKSES PREMIUM</label>
                     <input type="text" id="access-code" placeholder="Masukkan kode unik pembeli">
                 </div>
@@ -146,37 +406,71 @@
     </div>
 
     <!-- HALAMAN DASHBOARD -->
-    <div id="dashboard-section" class="container hidden">
-        <div class="welcome-box">
-            <div>
-                <h2 id="user-name">Halo, Pelajar!</h2>
-                <p style="font-size: 0.8rem; color: #7f8c8d;">Mari kuasai Bahasa Inggris hari ini.</p>
+    <div id="dashboard-section" class="hidden">
+        <div class="container">
+            <div class="welcome-box">
+                <div>
+                    <h2 id="user-name">Halo, Pelajar!</h2>
+                    <p style="font-size: 0.9rem; color: #7f8c8d; margin-top: 5px;">Mari kuasai Bahasa Inggris 300 hari challenge!</p>
+                </div>
             </div>
-            <button onclick="handleLogout()" style="background:none; border:1px solid #ddd; padding:8px 15px; border-radius:10px; cursor:pointer;">Keluar</button>
-        </div>
 
-        <div class="progress-card">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <p style="font-weight:600; font-size:0.9rem;">Target Belajar 300 Hari</p>
-                <h2 id="progress-text">0%</h2>
+            <div class="progress-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; position: relative; z-index: 1;">
+                    <p style="font-weight:600; font-size:1rem;">Target Belajar 300 Hari Challenge</p>
+                    <h2 id="progress-text" style="font-size: 2rem; font-weight: 700;">0%</h2>
+                </div>
+                <div class="bar-bg"><div id="progress-fill"></div></div>
+                <p id="progress-detail" style="font-size:0.9rem; opacity:0.95; margin-top: 10px;">Selesaikan materi harian untuk menaikkan progres Anda</p>
             </div>
-            <div class="bar-bg"><div id="progress-fill"></div></div>
-            <p id="progress-detail" style="font-size:0.8rem; opacity:0.9;">Selesaikan materi untuk menaikkan progres.</p>
-        </div>
 
-        <h3 style="margin-bottom: 20px;">Daftar Materi</h3>
-        <div class="grid-materi" id="materi-grid"></div>
+            <div class="grid-section">
+                <h3 style="margin-bottom: 20px; font-size: 1.3rem; color: var(--primary); display: flex; align-items: center; gap: 10px;">
+                    <i class="fa-solid fa-book-open"></i>
+                    Daftar Materi Harian
+                </h3>
+                <div class="grid-materi" id="materi-grid"></div>
+            </div>
+        </div>
     </div>
 
     <!-- VIEWER MATERI -->
     <div id="viewer" class="hidden">
         <div class="viewer-nav">
-            <button onclick="closeViewer()" style="border:none; background:none; cursor:pointer;"><i class="fa-solid fa-xmark fa-xl"></i></button>
+            <button onclick="closeViewer()" title="Tutup">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
             <h4 id="view-title">Materi</h4>
-            <div style="width:20px;"></div>
+            <div style="width:24px;"></div>
         </div>
         <iframe id="content-frame" src=""></iframe>
         <button id="btn-mark-complete" class="btn-finish">Selesaikan Materi Ini</button>
+    </div>
+
+    <!-- MODAL NOTE -->
+    <div id="note-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="color: var(--primary);"><i class="fa-solid fa-sticky-note"></i> Catatan Belajar</h3>
+                <button onclick="closeNote()" class="viewer-nav button"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <iframe src="note.html" style="width:100%; height:400px; border:none; border-radius:0 0 20px 20px;"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TENTANG -->
+    <div id="about-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="color: var(--primary);"><i class="fa-solid fa-info-circle"></i> Tentang Aplikasi</h3>
+                <button onclick="closeAbout()" class="viewer-nav button"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <iframe src="tentang.html" style="width:100%; height:400px; border:none; border-radius:0 0 20px 20px;"></iframe>
+            </div>
+        </div>
     </div>
 
     <script type="module">
@@ -184,7 +478,6 @@
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // GANTI DENGAN CONFIG FIREBASE ANDA
         const firebaseConfig = {
             apiKey: "AIzaSyA0aIG6_HpP_JTrKQPG1mzoAsyu4KotaHk",
             authDomain: "english300-e6dd6.firebaseapp.com",
@@ -203,27 +496,40 @@
         let currentUser = null;
         let completedDays = [];
 
-        // Auth Handler
+        // DOM Elements
         const authForm = document.getElementById('auth-form');
         const toggleAuthBtn = document.getElementById('toggle-auth');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const headerMenu = document.getElementById('header-menu');
+        const header = document.getElementById('header');
 
+        // Toggle Auth Mode
         toggleAuthBtn.onclick = (e) => {
             e.preventDefault();
             isLoginMode = !isLoginMode;
             document.getElementById('auth-title').textContent = isLoginMode ? "Selamat Datang" : "Daftar Akun";
             document.getElementById('btn-submit').textContent = isLoginMode ? "Masuk" : "Daftar & Aktivasi";
-            document.getElementById('access-code-group').classList.toggle('hidden', isLoginMode);
+            document.getElementById('access-code-group').style.display = isLoginMode ? 'none' : 'block';
             document.getElementById('toggle-text').textContent = isLoginMode ? "Belum punya akun?" : "Sudah punya akun?";
             toggleAuthBtn.textContent = isLoginMode ? "Daftar Sekarang" : "Login di sini";
         };
 
+        // Mobile Menu Toggle
+        mobileMenuBtn.onclick = () => {
+            headerMenu.classList.toggle('active');
+        };
+
+        // Auth State Listener
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
                 await fetchProgress();
                 showSection('dashboard');
+                header.style.display = 'block';
             } else {
                 showSection('auth');
+                header.style.display = 'none';
+                headerMenu.classList.remove('active');
             }
             document.getElementById('loader').classList.add('hidden');
         });
@@ -231,9 +537,20 @@
         async function fetchProgress() {
             const docRef = doc(db, "users", currentUser.uid);
             const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) completedDays = docSnap.data().completed || [];
-            else await setDoc(docRef, { completed: [] });
+            if (docSnap.exists()) {
+                completedDays = docSnap.data().completed || [];
+            } else {
+                await setDoc(docRef, { completed: [] });
+            }
             renderGrid();
+            updateHeaderStats();
+        }
+
+        function updateHeaderStats() {
+            const count = completedDays.length;
+            const pct = Math.round((count / 300) * 100);
+            document.getElementById('days-completed').textContent = count;
+            document.getElementById('progress-pct').textContent = pct + '%';
         }
 
         function renderGrid() {
@@ -242,7 +559,11 @@
             for (let i = 1; i <= 300; i++) {
                 const card = document.createElement('div');
                 card.className = `day-card ${completedDays.includes(i) ? 'completed' : ''}`;
-                card.innerHTML = `<i class="fa-solid fa-book"></i><h4>Hari ${i}</h4><p style="font-size:0.7rem; color:#7f8c8d;">${completedDays.includes(i) ? 'SELESAI' : 'BELUM'}</p>`;
+                card.innerHTML = `
+                    <i class="fa-solid fa-book"></i>
+                    <h4>Hari ${i}</h4>
+                    <div class="status">${completedDays.includes(i) ? 'SELESAI' : 'BELUM'}</div>
+                `;
                 card.onclick = () => openViewer(i);
                 grid.appendChild(card);
             }
@@ -265,7 +586,6 @@
                 if (isLoginMode) {
                     await signInWithEmailAndPassword(auth, email, password);
                 } else {
-                    // CEK KODE AKSES DI FIRESTORE
                     const codeRef = doc(db, "accessCodes", code.toUpperCase().trim());
                     const codeSnap = await getDoc(codeRef);
                     if (!codeSnap.exists() || codeSnap.data().isUsed) {
@@ -283,11 +603,13 @@
         let currentDayOpen = 0;
         window.openViewer = (day) => {
             currentDayOpen = day;
-            document.getElementById('view-title').textContent = "Materi Hari " + day;
+            document.getElementById('view-title').textContent = `Materi Hari ${day}`;
             document.getElementById('content-frame').src = `hari${day}.html`;
             document.getElementById('viewer').classList.remove('hidden');
-            document.getElementById('btn-mark-complete').disabled = completedDays.includes(day);
-            document.getElementById('btn-mark-complete').textContent = completedDays.includes(day) ? "Sudah Selesai" : "Selesaikan Materi Ini";
+            const btn = document.getElementById('btn-mark-complete');
+            const isCompleted = completedDays.includes(day);
+            btn.disabled = isCompleted;
+            btn.textContent = isCompleted ? "Sudah Selesai ✓" : "Selesaikan Materi Ini";
         };
 
         window.closeViewer = () => {
@@ -296,18 +618,45 @@
         };
 
         document.getElementById('btn-mark-complete').onclick = async () => {
+            if (completedDays.includes(currentDayOpen)) return;
             const docRef = doc(db, "users", currentUser.uid);
             await updateDoc(docRef, { completed: arrayUnion(currentDayOpen) });
             completedDays.push(currentDayOpen);
             renderGrid();
+            updateHeaderStats();
             closeViewer();
         };
 
-        window.handleLogout = () => signOut(auth);
+        // Modal Functions
+        window.openNote = () => {
+            document.getElementById('note-modal').classList.add('active');
+        };
+        window.closeNote = () => {
+            document.getElementById('note-modal').classList.remove('active');
+        };
+        window.openAbout = () => {
+            document.getElementById('about-modal').classList.add('active');
+        };
+        window.closeAbout = () => {
+            document.getElementById('about-modal').classList.remove('active');
+        };
+
+        window.handleLogout = () => {
+            signOut(auth);
+            headerMenu.classList.remove('active');
+        };
+
         function showSection(id) {
             document.getElementById('auth-section').classList.toggle('hidden', id !== 'auth');
             document.getElementById('dashboard-section').classList.toggle('hidden', id !== 'dashboard');
         }
+
+        // Close modals on outside click
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html>
