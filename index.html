@@ -1,3 +1,5 @@
+--- START OF FILE Paste April 27, 2026 - 4:26PM ---
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -151,6 +153,12 @@
             align-items: center;
         }
         .welcome-box h2 { font-size: 1.3rem; color: var(--primary); }
+
+        .dashboard-nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
 
         .progress-card { 
             background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); 
@@ -355,14 +363,7 @@
                 <i class="fa-solid fa-bars"></i>
             </button>
             <div class="header-menu" id="header-menu">
-                <button class="menu-btn" onclick="openNote()">
-                    <i class="fa-solid fa-sticky-note"></i>
-                    Catatan
-                </button>
-                <button class="menu-btn" onclick="openAbout()">
-                    <i class="fa-solid fa-info-circle"></i>
-                    Tentang
-                </button>
+                <!-- Tombol keluar tetap di sini -->
                 <button class="menu-btn" onclick="handleLogout()" style="background: #ff5722; color: white;">
                     <i class="fa-solid fa-sign-out-alt"></i>
                     Keluar
@@ -408,6 +409,19 @@
     <!-- HALAMAN DASHBOARD -->
     <div id="dashboard-section" class="hidden">
         <div class="container">
+            
+            <!-- TOMBOL DIPINDAHKAN KE SINI -->
+            <div class="dashboard-nav-buttons">
+                <button class="menu-btn" onclick="openNote()">
+                    <i class="fa-solid fa-sticky-note"></i>
+                    Catatan
+                </button>
+                <button class="menu-btn" onclick="openAbout()">
+                    <i class="fa-solid fa-info-circle"></i>
+                    Tentang
+                </button>
+            </div>
+
             <div class="welcome-box">
                 <div>
                     <h2 id="user-name">Halo, Pelajar!</h2>
