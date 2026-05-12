@@ -285,6 +285,13 @@
       color: #e5484d;
       border: 1px solid #ffcdcc;
     }
+    .reset-dash {
+      background: #fff0e0;
+      border-radius: 30px;
+      padding: 0.4rem 1rem;
+      color: #e67e22;
+      border: 1px solid #ffd9b5;
+    }
     .progress-hero {
       background: linear-gradient(115deg, #0c2e42, #136b72);
       border-radius: 2rem;
@@ -321,6 +328,7 @@
       justify-content: space-between;
       align-items: baseline;
       margin: 1.8rem 0 1.2rem;
+      flex-wrap: wrap;
     }
     .grid-90 {
       display: grid;
@@ -374,6 +382,7 @@
     .viewer-header {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       padding: 1rem 1.5rem;
       border-bottom: 1px solid #e0edf2;
       background: #fff;
@@ -390,10 +399,137 @@
       font-weight: 700;
       border: none;
       cursor: pointer;
+      font-size: 1rem;
     }
     .btn-finish-modern:disabled {
       background: #b0c4c4;
       cursor: not-allowed;
+    }
+
+    /* POPUP DAFTAR MODERN */
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 20000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .popup-container {
+      background: white;
+      max-width: 450px;
+      width: 100%;
+      border-radius: 32px;
+      overflow: hidden;
+      animation: popupIn 0.3s ease;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+    @keyframes popupIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    .popup-header {
+      background: linear-gradient(135deg, #0c2e42, #136b72);
+      padding: 24px 24px 20px;
+      color: white;
+      text-align: center;
+    }
+    .popup-header i {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    .popup-header h3 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .popup-body {
+      padding: 28px 24px 24px;
+    }
+    .popup-info {
+      background: #f0f9ff;
+      border-radius: 20px;
+      padding: 18px;
+      margin-bottom: 24px;
+      border-left: 4px solid #00a2c2;
+    }
+    .popup-info p {
+      color: #1e3a5f;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .popup-info ul {
+      margin-left: 20px;
+      color: #2c5282;
+      font-size: 13px;
+    }
+    .popup-info li {
+      margin: 8px 0;
+    }
+    .btn-wa-popup {
+      display: block;
+      width: 100%;
+      background: #25D366;
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-align: center;
+      text-decoration: none;
+    }
+    .btn-wa-popup i {
+      margin-right: 10px;
+      font-size: 18px;
+    }
+    .btn-wa-popup:hover {
+      background: #128C7E;
+      transform: translateY(-2px);
+    }
+    .btn-close-popup {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      margin-top: 16px;
+      width: 100%;
+      padding: 12px;
+      font-size: 14px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .btn-close-popup:hover {
+      color: #475569;
+    }
+    .toast-notif {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1f2937;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 60px;
+      font-size: 0.85rem;
+      z-index: 11000;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      backdrop-filter: blur(8px);
+      font-weight: 500;
     }
   </style>
 </head>
@@ -467,6 +603,7 @@
         <button class="nav-btn" id="navAboutBtn"><i class="fa-regular fa-address-card"></i> Tentang Kami</button>
         <button class="nav-btn" id="navContactBtn"><i class="fa-regular fa-envelope"></i> Contact Me</button>
         <button class="nav-btn" id="navReadBtn"><i class="fa-regular fa-newspaper"></i> Read</button>
+        <button class="nav-btn reset-dash" id="resetProgressBtn"><i class="fa-solid fa-arrow-rotate-left"></i> Reset Progress</button>
         <button class="nav-btn logout-dash" id="logoutDashboard"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
       </div>
     </div>
@@ -490,10 +627,37 @@
   </div>
 </div>
 
+<!-- POPUP DAFTAR WA -->
+<div id="registerPopup" class="popup-overlay">
+  <div class="popup-container">
+    <div class="popup-header">
+      <i class="fab fa-whatsapp"></i>
+      <h3>Daftar Program Premium</h3>
+    </div>
+    <div class="popup-body">
+      <div class="popup-info">
+        <p><strong>📋 Silakan lakukan pendaftaran dengan ketentuan berikut:</strong></p>
+        <ul>
+          <li>Kirimkan <strong>Nama Lengkap</strong> Anda</li>
+          <li>Sertakan <strong>Bukti Transfer</strong> pembayaran</li>
+          <li>Admin akan memproses dan mengirimkan <strong>Kode Akses Premium</strong></li>
+        </ul>
+        <p style="margin-top: 12px; font-size:12px;">✅ Setelah kode diterima, Anda bisa login dan mulai belajar 90 hari!</p>
+      </div>
+      <a href="#" id="whatsappDirectLink" class="btn-wa-popup" target="_blank">
+        <i class="fab fa-whatsapp"></i> Klik Untuk Daftar via WhatsApp
+      </a>
+      <button class="btn-close-popup" id="closePopupBtn">
+        <i class="fa-regular fa-circle-xmark"></i> Tutup
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- VIEWER -->
 <div id="viewerModal">
   <div class="viewer-header">
-    <button id="closeViewerBtn" style="background:none; border:none; font-size:1.5rem; cursor:pointer;"><i class="fa-regular fa-circle-xmark"></i></button>
+    <button id="closeViewerBtn" style="background:none; border:none; font-size:1.6rem; cursor:pointer;"><i class="fa-regular fa-circle-xmark"></i></button>
     <h4 id="viewerDayTitle">Materi Hari</h4>
     <div style="width:26px;"></div>
   </div>
@@ -515,7 +679,6 @@
     appId: "1:458807719521:web:48f5f49f3e11ca16e45c20"
   };
 
-  // Inisialisasi Firebase
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
@@ -523,7 +686,6 @@
   let completedDaysArr = [];
   const TOTAL_DAYS = 90;
 
-  // DOM Elements
   const loaderEl = document.getElementById('loader');
   const authWrapper = document.getElementById('auth-wrapper');
   const dashboardSection = document.getElementById('dashboard-section');
@@ -535,36 +697,44 @@
 
   let currentDay = 0;
 
-  // Nomor WhatsApp (ganti dengan nomor Anda)
-  const WHATSAPP_NUMBER = "6285327599575"; // 085327599575 -> 6285327599575
-  const WHATSAPP_MESSAGE = "Halo%20saya%20tertarik%20dengan%20program%20English%20Mastery%2090%20hari.%20Mohon%20informasi%20lebih%20lanjut%20dan%20kode%20aksesnya.%20Terima%20kasih.";
+  // NOMOR WHATSAPP ADMIN (085327599575)
+  const ADMIN_WA_NUMBER = "6285327599575";
+  const DEFAULT_WA_MESSAGE = "Halo Admin, saya ingin mendaftar program English Mastery 90 hari.%0A%0ANama saya: (isi nama lengkap)%0ABukti transfer akan saya lampirkan setelah konfirmasi.%0A%0ATerima kasih.";
 
-  function openWhatsApp() {
-    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${WHATSAPP_MESSAGE}`;
-    window.open(whatsappUrl, '_blank');
+  function openWhatsAppRegistration() {
+    const waUrl = `https://wa.me/${ADMIN_WA_NUMBER}?text=${DEFAULT_WA_MESSAGE}`;
+    window.open(waUrl, '_blank');
   }
 
-  function hideLoader() {
-    loaderEl.classList.add('hidden');
+  function showPopupRegister() {
+    const popup = document.getElementById('registerPopup');
+    popup.style.display = 'flex';
+    // Set link WA langsung
+    const waLink = document.getElementById('whatsappDirectLink');
+    if (waLink) {
+      waLink.href = `https://wa.me/${ADMIN_WA_NUMBER}?text=${DEFAULT_WA_MESSAGE}`;
+    }
   }
 
-  function showLoader() {
-    loaderEl.classList.remove('hidden');
+  function closePopup() {
+    document.getElementById('registerPopup').style.display = 'none';
   }
 
-  function showAuth() {
-    authWrapper.classList.remove('hidden');
-    dashboardSection.classList.add('hidden');
-    hideLoader();
+  function showToast(msg) {
+    let toast = document.querySelector('.toast-notif');
+    if(toast) toast.remove();
+    const div = document.createElement('div');
+    div.className = 'toast-notif';
+    div.innerText = msg;
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 3000);
   }
 
-  function showDashboard() {
-    authWrapper.classList.add('hidden');
-    dashboardSection.classList.remove('hidden');
-    hideLoader();
-  }
+  function hideLoader() { loaderEl.classList.add('hidden'); }
+  function showLoader() { loaderEl.classList.remove('hidden'); }
+  function showAuth() { authWrapper.classList.remove('hidden'); dashboardSection.classList.add('hidden'); hideLoader(); }
+  function showDashboard() { authWrapper.classList.add('hidden'); dashboardSection.classList.remove('hidden'); hideLoader(); }
 
-  // Render grid 90 hari
   function renderDashboardGrid() {
     const grid = document.getElementById('materiGrid');
     if (!grid) return;
@@ -587,12 +757,10 @@
     document.getElementById('progressCounter').innerText = `${completedDaysArr.length} / ${TOTAL_DAYS} materi selesai`;
   }
 
-  // Load data dari Firestore
   async function loadUserData(code) {
     try {
       const docRef = doc(db, "accessCodes", code);
       const snap = await getDoc(docRef);
-      
       if (snap.exists() && snap.data().status === "active") {
         const data = snap.data();
         let device = localStorage.getItem('dev_token');
@@ -600,16 +768,8 @@
           device = 'DEV_' + Math.random().toString(36).substr(2, 8).toUpperCase();
           localStorage.setItem('dev_token', device);
         }
-        
-        // Cek lock device
-        if (data.lockedDevice && data.lockedDevice !== device) {
-          return false;
-        }
-        
-        if (!data.lockedDevice) {
-          await updateDoc(docRef, { lockedDevice: device });
-        }
-        
+        if (data.lockedDevice && data.lockedDevice !== device) return false;
+        if (!data.lockedDevice) await updateDoc(docRef, { lockedDevice: device });
         completedDaysArr = data.completed || [];
         completedDaysArr = completedDaysArr.filter(d => d >= 1 && d <= TOTAL_DAYS);
         renderDashboardGrid();
@@ -617,12 +777,11 @@
       }
       return false;
     } catch (err) {
-      console.error("Load data error:", err);
+      console.error(err);
       return false;
     }
   }
 
-  // Proses login
   async function handleLogin(code) {
     showLoader();
     const isValid = await loadUserData(code);
@@ -635,13 +794,10 @@
       const alertBox = document.getElementById('loginAlert');
       alertBox.innerText = "⚠️ Kode tidak valid / sudah terdaftar di perangkat lain.";
       alertBox.style.display = 'block';
-      setTimeout(() => {
-        alertBox.style.display = 'none';
-      }, 4000);
+      setTimeout(() => alertBox.style.display = 'none', 4000);
     }
   }
 
-  // Auto login saat load
   async function autoLogin() {
     const savedCode = localStorage.getItem('premium_code');
     if (savedCode) {
@@ -659,7 +815,25 @@
     }
   }
 
-  // Inject materi fallback jika file html tidak ada
+  async function resetAllProgress() {
+    if (!currentUserCode) return;
+    const confirmReset = confirm("⚠️ PERINGATAN: Semua progres belajar (90 hari) akan dihapus secara permanen. Anda harus memulai dari awal. Lanjutkan?");
+    if (!confirmReset) return;
+    showLoader();
+    try {
+      const docRef = doc(db, "accessCodes", currentUserCode);
+      await updateDoc(docRef, { completed: [] });
+      completedDaysArr = [];
+      renderDashboardGrid();
+      showToast("✅ Semua progres telah direset. Mulai perjalanan baru!");
+    } catch (err) {
+      console.error("Gagal reset:", err);
+      showToast("❌ Gagal mereset progres, coba lagi.");
+    } finally {
+      hideLoader();
+    }
+  }
+
   function injectFallbackContent(day) {
     const topics = [
       "Greeting & Introduction", "Pronouns & To Be", "Simple Present Tense", "Present Continuous", "Common Verbs",
@@ -709,34 +883,22 @@
     materiIframe.srcdoc = content;
   }
 
-  // Buka materi
   function openMateri(day) {
     currentDay = day;
     viewerDayTitle.innerText = `📘 Hari ${day} – Materi Premium`;
     viewerModal.style.display = 'flex';
-    
-    // Coba load file hariXX.html, jika gagal pakai fallback
     materiIframe.src = `hari${day}.html`;
     materiIframe.onload = () => {
-      // Beri sedikit waktu untuk deteksi error load
       setTimeout(() => {
         try {
           if (materiIframe.contentDocument && materiIframe.contentDocument.body) {
             const bodyText = materiIframe.contentDocument.body.innerText;
-            if (!bodyText || bodyText.trim() === "") {
-              injectFallbackContent(day);
-            }
+            if (!bodyText || bodyText.trim() === "") injectFallbackContent(day);
           }
-        } catch(e) {
-          injectFallbackContent(day);
-        }
+        } catch(e) { injectFallbackContent(day); }
       }, 300);
     };
-    
-    materiIframe.onerror = () => {
-      injectFallbackContent(day);
-    };
-    
+    materiIframe.onerror = () => injectFallbackContent(day);
     const isDone = completedDaysArr.includes(day);
     markCompleteBtn.disabled = isDone;
     markCompleteBtn.textContent = isDone ? "✔️ Materi Sudah Selesai" : "🏆 Tandai Selesai & Raih Progress";
@@ -748,11 +910,9 @@
     currentDay = 0;
   }
 
-  // Tandai selesai
   async function markAsComplete() {
     if (!currentDay || completedDaysArr.includes(currentDay)) return;
     if (!currentUserCode) return;
-    
     showLoader();
     try {
       const docRef = doc(db, "accessCodes", currentUserCode);
@@ -760,15 +920,16 @@
       completedDaysArr.push(currentDay);
       renderDashboardGrid();
       closeViewer();
+      showToast(`🎉 Selamat! Hari ${currentDay} selesai. Lanjutkan konsisten!`);
     } catch (err) {
-      console.error("Gagal update:", err);
+      console.error(err);
       alert("Terjadi kesalahan, coba lagi.");
     } finally {
       hideLoader();
     }
   }
 
-  // Event listeners
+  // EVENT LISTENERS
   document.getElementById('premium-login-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const codeInput = document.getElementById('accessCodeInput').value.trim().toUpperCase();
@@ -782,11 +943,22 @@
     await handleLogin(codeInput);
   });
 
-  // Tombol Daftar Sekarang ke WhatsApp
+  // TOMBOL DAFTAR SEKARANG => POPUP
   const daftarBtn = document.getElementById('daftarWhatsapp');
   if (daftarBtn) {
-    daftarBtn.addEventListener('click', openWhatsApp);
+    daftarBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      showPopupRegister();
+    });
   }
+
+  // Tutup popup
+  document.getElementById('closePopupBtn')?.addEventListener('click', closePopup);
+  // Klik overlay juga bisa tutup
+  const popupOverlay = document.getElementById('registerPopup');
+  popupOverlay?.addEventListener('click', (e) => {
+    if (e.target === popupOverlay) closePopup();
+  });
 
   document.getElementById('logoutDashboard')?.addEventListener('click', () => {
     if (confirm("Keluar dari program? Anda perlu kode akses kembali untuk login.")) {
@@ -795,17 +967,16 @@
       location.reload();
     }
   });
-
+  
+  document.getElementById('resetProgressBtn')?.addEventListener('click', resetAllProgress);
   closeViewerBtn?.addEventListener('click', closeViewer);
   markCompleteBtn?.addEventListener('click', markAsComplete);
 
-  // Navigasi menu
   document.getElementById('navTensesBtn')?.addEventListener('click', () => alert("📚 16 Tenses lengkap: akses melalui materi Hari 3,4,5,6,9,10,11. Pahami pola dan latihan cepat!"));
   document.getElementById('navAboutBtn')?.addEventListener('click', () => alert("✨ SpeakEasy90: program 3 bulan belajar tanpa membosankan, fokus speaking dan percaya diri. Dibuat oleh para praktisi bahasa."));
   document.getElementById('navContactBtn')?.addEventListener('click', () => alert("📩 Hubungi: hello@speakeasy90.com | WA: +62 812 3456 7890 (Dukungan 24 jam)"));
   document.getElementById('navReadBtn')?.addEventListener('click', () => alert("📖 Rekomendasi bacaan: English Digest harian ada di setiap materi! Baca tips dan trik cepat menguasai grammar."));
 
-  // Start aplikasi
   autoLogin();
 </script>
 </body>
